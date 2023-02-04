@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a00d650046467849a98d832f5a103d4, type: 3}
+  m_Name: Candy4_Blue
+  m_EditorClassIdentifier: 
+  type: 19
+  sprite:
+  - {fileID: 21300000, guid: 2c031f9868c6d284d85aeb54f913d206, type: 3}
+  - {fileID: 21300000, guid: e2458d89cefbf9a46acedcdcd968036b, type: 3}
+  - {fileID: 21300000, guid: ac91d39b493329948b022e8ab3b71b70, type: 3}
