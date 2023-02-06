@@ -95,7 +95,10 @@ public class TileMatchManager : MonoBehaviour
             isMatchedTile = RemoveAllMatchTile();
         }
 
-        isCheckedTile = false;
+        clickedTile = null;
+        toBeChangedTile = null;
+
+        if (isCheckedTile) isCheckedTile = false;
     }
 
     // 비어 있는(ItemType.Default) 타일이 있는지 확인
@@ -195,8 +198,6 @@ public class TileMatchManager : MonoBehaviour
 
                         RemoveTile(toBeChangedTile.xPos, toBeChangedTile.yPos);
                     }
-
-                    //RemoveAllMatchTile();
                 }
                 #endregion
 
@@ -208,9 +209,6 @@ public class TileMatchManager : MonoBehaviour
                 {
                     RemoveTile(toBeChangedTile.xPos, toBeChangedTile.yPos);
                 }
-
-                //clickedTile = null;
-                //toBeChangedTile = null;
 
                 StartCoroutine(CheckMatchAllTile());
             }
@@ -235,12 +233,15 @@ public class TileMatchManager : MonoBehaviour
                 clickedTile = null;
                 toBeChangedTile = null;
 
-                isCheckedTile = false;
+                if (isCheckedTile) isCheckedTile = false;
             }
         }
         else
         {
-            isCheckedTile = false;
+            clickedTile = null;
+            toBeChangedTile = null;
+
+            if (isCheckedTile) isCheckedTile = false;
         }
     }
 
@@ -392,8 +393,6 @@ public class TileMatchManager : MonoBehaviour
     {
         bool isMatchedTile = false;
 
-        if(clickedTile != null && toBeChangedTile != null)
-
         for (int y = 0; y < maxRow; y++)
         {
             for (int x = 0; x < maxColumn; x++)
@@ -469,9 +468,6 @@ public class TileMatchManager : MonoBehaviour
                 {
                     SetTileItemSprite(newSpecialTile, false, SpriteType.Anything);
                 }
-
-                clickedTile = null;
-                toBeChangedTile = null;
             }
         }
 
