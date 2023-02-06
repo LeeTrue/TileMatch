@@ -33,6 +33,7 @@ public class TileMatchManager : MonoBehaviour
 
     public Tile ClickedTile
     {
+        get { return clickedTile; }
         set { clickedTile = value; }
     }
 
@@ -40,8 +41,11 @@ public class TileMatchManager : MonoBehaviour
 
     public Tile ToBeChangedTile
     {
+        get { return toBeChangedTile; }
         set { toBeChangedTile = value; }
     }
+
+    public bool isCheckedTile { get; private set; }
 
     private void Awake()
     {
@@ -90,6 +94,8 @@ public class TileMatchManager : MonoBehaviour
 
             isMatchedTile = RemoveAllMatchTile();
         }
+
+        isCheckedTile = false;
     }
 
     // 비어 있는(ItemType.Default) 타일이 있는지 확인
@@ -143,6 +149,8 @@ public class TileMatchManager : MonoBehaviour
     public void CheckPossibleChangeTile()
     {
         if (clickedTile.itemType == ItemType.Default || toBeChangedTile.itemType == ItemType.Default) return;
+
+        isCheckedTile = true;
 
         // 상,하,좌,우의 타일일 경우에만 위치 변경
         if ((clickedTile.xPos == toBeChangedTile.xPos && Mathf.Abs(clickedTile.yPos - toBeChangedTile.yPos) == 1) ||
@@ -201,8 +209,8 @@ public class TileMatchManager : MonoBehaviour
                     RemoveTile(toBeChangedTile.xPos, toBeChangedTile.yPos);
                 }
 
-                clickedTile = null;
-                toBeChangedTile = null;
+                //clickedTile = null;
+                //toBeChangedTile = null;
 
                 StartCoroutine(CheckMatchAllTile());
             }
@@ -223,7 +231,16 @@ public class TileMatchManager : MonoBehaviour
 
                 clickedTile.Move(toBeChangedTile.xPos, toBeChangedTile.yPos, speed * 2, true);
                 toBeChangedTile.Move(clickedPosX, clickedPosY, speed * 2, true);
+
+                clickedTile = null;
+                toBeChangedTile = null;
+
+                isCheckedTile = false;
             }
+        }
+        else
+        {
+            isCheckedTile = false;
         }
     }
 
@@ -375,6 +392,8 @@ public class TileMatchManager : MonoBehaviour
     {
         bool isMatchedTile = false;
 
+        if(clickedTile != null && toBeChangedTile != null)
+
         for (int y = 0; y < maxRow; y++)
         {
             for (int x = 0; x < maxColumn; x++)
@@ -450,6 +469,9 @@ public class TileMatchManager : MonoBehaviour
                 {
                     SetTileItemSprite(newSpecialTile, false, SpriteType.Anything);
                 }
+
+                clickedTile = null;
+                toBeChangedTile = null;
             }
         }
 

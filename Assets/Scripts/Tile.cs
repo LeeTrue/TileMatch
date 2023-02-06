@@ -69,7 +69,11 @@ public class Tile : MonoBehaviour
     #region Control Tile
     private void OnMouseEnter()
     {
-        tileManager.ToBeChangedTile = this;
+        // 전체 체크가 끝날때까지는 toBeChangedTile이 변경되지 않도록 함.
+        if (!tileManager.isCheckedTile)
+        {
+            tileManager.ToBeChangedTile = this;
+        }
     }
 
     private void OnMouseDown()
