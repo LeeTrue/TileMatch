@@ -186,7 +186,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 17.454546, y: 11.636364}
+  m_Size: {x: 25, y: 25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -251,9 +251,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a62fb356db7d2834b87559058d1855a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRow: 6
-  maxColumn: 6
-  speed: 0.2
+  maxRow: 8
+  maxColumn: 8
+  speed: 0.1
   spriteDataArr:
   - {fileID: 11400000, guid: 9ee40a8e7f9989541861e40f648c77d6, type: 2}
   - {fileID: 11400000, guid: c78fb97fc080e0e47a82e77d81e2274c, type: 2}

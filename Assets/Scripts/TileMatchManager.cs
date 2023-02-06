@@ -14,6 +14,11 @@ public enum ItemType
     Anything
 }
 
+public static class Const
+{
+    public const int MAX_COUNT = 8;
+}
+
 public class TileMatchManager : MonoBehaviour
 {
     public int maxRow;
@@ -58,6 +63,9 @@ public class TileMatchManager : MonoBehaviour
                 spriteDataDic.Add(data.type, data);
             }
         }
+
+        maxRow = (maxRow > Const.MAX_COUNT) ? Const.MAX_COUNT : maxRow;
+        maxColumn = (maxColumn > Const.MAX_COUNT) ? Const.MAX_COUNT : maxColumn;
 
         // 맨 처음 전체 타일 생성 (ItemType.Default)
         tiles = new Tile[maxColumn, maxRow];
