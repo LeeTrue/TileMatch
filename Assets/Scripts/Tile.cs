@@ -32,8 +32,14 @@ public class Tile : MonoBehaviour
             else
             {
                 imageSprite.sprite = tileSpriteData.sprite[0];
-                if(itemType == ItemType.Bomb || itemType == ItemType.Anything)
+                if (itemType == ItemType.Bomb || itemType == ItemType.Anything)
                     animator.Play(createAnimation.name);
+            }
+
+            // 타일의 아이템이 있는 경우, 배경도 enable
+            if(itemType != ItemType.Default && itemType != ItemType.Empty)
+            {
+                this.GetComponent<SpriteRenderer>().enabled = true;
             }
         }
     }
@@ -83,14 +89,18 @@ public class Tile : MonoBehaviour
 
     private void OnMouseUp()
     {
-        tileManager.CheckPossibleChangeTile();
+        if (tileManager.ClickedTile != tileManager.ToBeChangedTile)
+        {
+            tileManager.CheckPossibleChangeTile();
+        }
     }
     #endregion
 
     #region Move Tile
     public void Move(int _xPos, int _yPos, float _moveTime, bool _isThread = false)
     {
-        //Debug.Log($"Move [{xPos}, {yPos}] -> [{_xPos}, {_yPos}]");
+        if (itemType == ItemType.Empty) return;
+
         if (!_isThread)
         {
             if (moveCoroutine != null)

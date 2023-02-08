@@ -47,7 +47,8 @@ public enum SpriteType
     Candy6_Yellow,
 
     Bomb,
-    Anything
+    Anything,
+    Empty
 }
 
 [CreateAssetMenu(fileName = "Item Sprite Data", menuName = "Scriptable Object/Item Sprite Data")]

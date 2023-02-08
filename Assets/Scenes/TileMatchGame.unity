@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 581336196}
   - component: {fileID: 581336197}
   m_Layer: 0
-  m_Name: GameGrid
+  m_Name: TileMatch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,18 +251,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a62fb356db7d2834b87559058d1855a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRow: 8
+  maxRow: 7
   maxColumn: 8
   speed: 0.1
+  emptyTileMap:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
   spriteDataArr:
   - {fileID: 11400000, guid: 9ee40a8e7f9989541861e40f648c77d6, type: 2}
   - {fileID: 11400000, guid: c78fb97fc080e0e47a82e77d81e2274c, type: 2}
-  - {fileID: 11400000, guid: 289bb8a85094a884bb1cad08f79324c6, type: 2}
+  - {fileID: 11400000, guid: c1a640a40a8b9bd44be567c487cfe180, type: 2}
   - {fileID: 11400000, guid: aae7240670f8ac749b669dfa3535cc9d, type: 2}
   - {fileID: 11400000, guid: f1c326cc8c62420458cf324d83374ee9, type: 2}
   - {fileID: 11400000, guid: 633e4bec21b6231469b2e3a0d5c5fdf4, type: 2}
   - {fileID: 11400000, guid: 9ca79c3319006f542b5642aa0d04c3c3, type: 2}
   - {fileID: 11400000, guid: 8f6ff9ceea7e13346a8c568e2f9020c6, type: 2}
+  - {fileID: 11400000, guid: 289bb8a85094a884bb1cad08f79324c6, type: 2}
   tilePrefab: {fileID: 174492, guid: f6090629d79e1a34db1e37f9f517d5a2, type: 3}
 --- !u!1 &606057589
 GameObject:

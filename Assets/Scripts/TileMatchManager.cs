@@ -11,7 +11,9 @@ public enum ItemType
     Row,
     Column,
     Bomb,
-    Anything
+    Anything,
+
+    Empty
 }
 
 public static class Const
@@ -24,6 +26,9 @@ public class TileMatchManager : MonoBehaviour
     public int maxRow;
     public int maxColumn;
     public float speed;
+
+    [Header("[Set TileMap]")]
+    public Vector2[] emptyTileMap;
 
     [Header("[Tile Data]")]
     public ItemSpriteData[] spriteDataArr;
@@ -70,6 +75,12 @@ public class TileMatchManager : MonoBehaviour
         // 맨 처음 전체 타일 생성 (ItemType.Default)
         tiles = new Tile[maxColumn, maxRow];
 
+        // 맵의 모양을 지정하기 위해 Empty 좌표에 타일을 미리 생성
+        foreach (Vector2 empty in emptyTileMap)
+        {
+            CreateNewTile((int)empty.x, (int)empty.y, ItemType.Empty);
+        }
+
         for (int x = 0; x < maxColumn; x++)
         {
             for (int y = 0; y < maxRow; y++)
@@ -114,43 +125,89 @@ public class TileMatchManager : MonoBehaviour
     {
         bool isDefaultTile = false;
 
-        // 제일 아래 행은 아래 타일과 비교할 필요가 없어 확인하지 않음
-        for (int yPos = maxRow - 2; yPos >= 0; yPos--)
+        // 제일 윗 행이 빈 타일일 경우엔 Standard로 새로 생성
+        for (int xPos = 0; xPos < maxColumn; xPos++)
         {
-            for (int xPos = 0; xPos < maxColumn; xPos++)
+            Tile topTile = tiles[xPos, 0];
+            
+            if (topTile.itemType == ItemType.Default)
             {
-                Tile checkTile = tiles[xPos, yPos];
-                if (checkTile.itemType == ItemType.Default) continue;
-                
-                Tile downTile = tiles[xPos, yPos + 1];
-                if (downTile.itemType != ItemType.Default) continue;
+                Destroy(topTile.gameObject);
 
-                // 아래가 비어있는 경우, 타일을 아래로 움직이고 새로 생성
-                Destroy(downTile.gameObject);
-                checkTile.Move(xPos, yPos + 1, speed);
-                tiles[xPos, yPos + 1] = checkTile;
-                CreateNewTile(xPos, yPos, ItemType.Default);
+                GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(xPos, -1), Quaternion.identity, this.transform);
+                tiles[xPos, 0] = newTile.GetComponent<Tile>();
+                tiles[xPos, 0].Init(xPos, -1, this, ItemType.Standard);
+                tiles[xPos, 0].Move(xPos, 0, speed);
+
+                SetTileItemSprite(tiles[xPos, 0], true);
 
                 isDefaultTile = true;
             }
         }
 
-        // 제일 윗 행이 빈 타일일 경우엔 Standard로 새로 생성
+        // 제일 아래 행은 아래 타일과 비교할 필요가 없어 확인하지 않음
         for (int xPos = 0; xPos < maxColumn; xPos++)
         {
-            Tile topTile = tiles[xPos, 0];
-            if (topTile.itemType != ItemType.Default) continue;
+            for (int yPos = maxRow - 2; yPos >= 0; yPos--)
+            {
+                Tile checkTile = tiles[xPos, yPos];
+                if (checkTile.itemType == ItemType.Default) continue;
 
-            Destroy(topTile.gameObject);
+                Tile downTile = tiles[xPos, yPos + 1];
+                if (downTile.itemType == ItemType.Empty) continue;
 
-            GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(xPos, -1), Quaternion.identity, this.transform);
-            tiles[xPos, 0] = newTile.GetComponent<Tile>();
-            tiles[xPos, 0].Init(xPos, -1, this, ItemType.Standard);
-            tiles[xPos, 0].Move(xPos, 0, speed);
-            
-            SetTileItemSprite(tiles[xPos, 0], true);
+                if (downTile.itemType == ItemType.Default)
+                {
+                    // check : Empty , down : Default
+                    if (checkTile.itemType == ItemType.Empty)
+                    {
+                        for (int y = yPos - 1; y >= 0; y--)
+                        {
+                            if (tiles[xPos, y].itemType == ItemType.Default) break;
 
-            isDefaultTile = true;
+                            if (tiles[xPos, y].itemType == ItemType.Empty)
+                            {
+                                if (y > 0) continue; // 최상단이 아닌 경우엔 계속 위의 Tile 비교
+                                else // 최상단이 Empty인 경우 새로 생성
+                                {
+                                    Destroy(downTile.gameObject);
+                                    GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(xPos, yPos), Quaternion.identity, this.transform);
+                                    tiles[xPos, yPos + 1] = newTile.GetComponent<Tile>();
+                                    tiles[xPos, yPos + 1].Init(xPos, yPos, this, ItemType.Standard);
+                                    tiles[xPos, yPos + 1].Move(xPos, yPos + 1, speed);
+
+                                    SetTileItemSprite(tiles[xPos, yPos + 1], true);
+
+                                    isDefaultTile = true;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                // standard 타일이 있는 경우엔 아래로 내림
+                                Destroy(downTile.gameObject);
+                                tiles[xPos, y].Move(xPos, yPos + 1, speed);
+                                tiles[xPos, yPos + 1] = tiles[xPos, y];
+                                CreateNewTile(xPos, y, ItemType.Default);
+
+                                isDefaultTile = true;
+                                break;
+                            }
+                        }                    
+                    }
+                    // check : Standard , down : Default
+                    else
+                    {
+                        // 아래가 비어있는 경우, 타일을 아래로 움직이고 새로 생성
+                        Destroy(downTile.gameObject);
+                        checkTile.Move(xPos, yPos + 1, speed);
+                        tiles[xPos, yPos + 1] = checkTile;
+                        CreateNewTile(xPos, yPos, ItemType.Default);
+
+                        isDefaultTile = true;
+                    }
+                }
+            }
         }
 
         return isDefaultTile;
@@ -160,6 +217,7 @@ public class TileMatchManager : MonoBehaviour
     public void CheckPossibleChangeTile()
     {
         if (clickedTile.itemType == ItemType.Default || toBeChangedTile.itemType == ItemType.Default) return;
+        if (clickedTile.itemType == ItemType.Empty || toBeChangedTile.itemType == ItemType.Empty) return;
 
         isCheckedTile = true;
 
@@ -412,8 +470,13 @@ public class TileMatchManager : MonoBehaviour
                 if (matchedTiles == null) continue;
 
                 #region Special Item Type (Row, Column, Bomb, Anything)
-                // 특수 아이템 생성을 위해 매칭된 타일들 중 랜덤으로 선정
-                Tile specialTile = matchedTiles[Random.Range(0, matchedTiles.Count)];
+                // 특수 아이템 생성을 위해 매칭된 타일들 중 랜덤으로 선정, Empty 타일로 선정될 경우 다시 랜덤 선정
+                Tile specialTile;
+                do
+                {
+                    specialTile = matchedTiles[Random.Range(0, matchedTiles.Count)];
+                } while (specialTile.itemType == ItemType.Empty);
+
                 Vector2 specialTilePos = new Vector2(specialTile.xPos, specialTile.yPos);
 
                 ItemType specialItemType = ItemType.Default;
@@ -485,7 +548,8 @@ public class TileMatchManager : MonoBehaviour
     // 지정한 좌표 타일 제거
     private bool RemoveTile(int _xPos, int _yPos)
     {
-        if (tiles[_xPos, _yPos].itemType == ItemType.Default || tiles[_xPos, _yPos].isRemovedTile) return false;
+        if (tiles[_xPos, _yPos].itemType == ItemType.Empty || tiles[_xPos, _yPos].itemType == ItemType.Default 
+            || tiles[_xPos, _yPos].isRemovedTile) return false;
 
         tiles[_xPos, _yPos].RemoveTile();
         CreateNewTile(_xPos, _yPos, ItemType.Default);
@@ -563,8 +627,8 @@ public class TileMatchManager : MonoBehaviour
     {
         if (_isRandom)
         {
-            // SpriteType.Anything, Bomb을 제외한 인덱스 index 2 ~ Length
-            _tile.tileItemSprite = spriteDataArr[Random.Range(2, spriteDataArr.Length)];
+            // SpriteType.Anything, Bomb, Empty을 제외한 인덱스 index 3 ~ Length
+            _tile.tileItemSprite = spriteDataArr[Random.Range(3, spriteDataArr.Length)];
         }
         else
         {
