@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a00d650046467849a98d832f5a103d4, type: 3}
   m_Name: Candy6_Green
   m_EditorClassIdentifier: 
-  type: 32
+  type: 33
   sprite:
   - {fileID: 21300000, guid: b41c52c46f609454781f9cd37ebc1964, type: 3}
   - {fileID: 21300000, guid: 7ffc474fc0312ff448179bc3ddb86de6, type: 3}

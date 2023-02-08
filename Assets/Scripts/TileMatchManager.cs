@@ -6,14 +6,20 @@ using UnityEngine.Events;
 
 public enum ItemType
 {
-    Default,
-    Standard,
-    Row,
-    Column,
-    Bomb,
-    Anything,
+    Default,    // 제일 초기화 상태
 
-    Empty
+    Empty,  // tile이 생성 X
+    
+    Standard,   // 기본 tile
+    
+    Row,    // 같은 행 제거 아이템
+    Column, // 같은 열 제거 아이템
+    Bomb,   // 주변 9개 제거 아이템
+    Anything,   // 같은 그림 제거 아이템
+    
+    Obstacle_Wood1,
+    Obstacle_Wood2,
+    Obstacle_Wood3
 }
 
 public static class Const

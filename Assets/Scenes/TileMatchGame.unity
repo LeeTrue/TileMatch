@@ -259,6 +259,10 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: 1}
   - {x: 1, y: 1}
+  - {x: 7, y: 6}
+  - {x: 6, y: 6}
+  - {x: 7, y: 5}
+  - {x: 6, y: 5}
   spriteDataArr:
   - {fileID: 11400000, guid: 9ee40a8e7f9989541861e40f648c77d6, type: 2}
   - {fileID: 11400000, guid: c78fb97fc080e0e47a82e77d81e2274c, type: 2}

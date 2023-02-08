@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a00d650046467849a98d832f5a103d4, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  type: 37
+  type: 38
   sprite:
   - {fileID: 21300000, guid: d77227eab3c63bc42b45baf4530195e7, type: 3}

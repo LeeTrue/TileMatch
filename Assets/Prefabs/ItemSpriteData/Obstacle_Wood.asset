@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a00d650046467849a98d832f5a103d4, type: 3}
-  m_Name: AnythingItem
+  m_Name: Obstacle_Wood
   m_EditorClassIdentifier: 
-  type: 39
+  type: 40
   sprite:
-  - {fileID: 21300000, guid: 68395d3a435c748479679629a5bc7967, type: 3}
+  - {fileID: 21300000, guid: d56ed3e33b66034438f2756604ee02d9, type: 3}
+  - {fileID: 21300000, guid: 9e3c95f8e845b2149abbd973371f6900, type: 3}
+  - {fileID: 21300000, guid: aac1695bfef71b5469bd5495b3406dfb, type: 3}
