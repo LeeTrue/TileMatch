@@ -502,7 +502,7 @@ public class TileMatchManager : MonoBehaviour
                 do
                 {
                     specialTile = matchedTiles[Random.Range(0, matchedTiles.Count)];
-                } while (specialTile.itemType == ItemType.Empty || (specialTile.obstacleType != ObstacleType.Null));
+                } while (specialTile.itemType == ItemType.Empty /*|| (specialTile.obstacleType != ObstacleType.Null)*/);
 
                 Vector2 specialTilePos = new Vector2(specialTile.xPos, specialTile.yPos);
 
