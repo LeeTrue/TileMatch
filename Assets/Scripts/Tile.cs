@@ -40,36 +40,25 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
         }
     }
 
-    //public SpriteRenderer obstacleSprite;
-    //private ItemSpriteData tileObstacleSpriteData;
-    //public ItemSpriteData tileObstacleItemSprite
-    //{
-    //    get { return tileObstacleSpriteData; }
-    //    set
-    //    {
-    //        tileObstacleSpriteData = value;
+    public Image obstacleSprite;
+    public ItemSpriteData tileObstacleSpriteData;
 
-    //        if (tileObstacleSpriteData == null)
-    //        {
-    //            obstacleSprite.sprite = null;
-    //        }
-    //        else
-    //        {
-    //            if (obstacleType == ObstacleType.Obstacle_Wood1)
-    //            {
-    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[0];
-    //            }
-    //            else if (obstacleType == ObstacleType.Obstacle_Wood2)
-    //            {
-    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[1];
-    //            }
-    //            else if (obstacleType == ObstacleType.Obstacle_Wood3)
-    //            {
-    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[2];
-    //            }
-    //        }
-    //    }
-    //}
+    private ObstacleType _obstacleType = ObstacleType.Null;
+    public ObstacleType obstacleType
+    {
+        get { return _obstacleType; }
+        set
+        {
+            _obstacleType = value;
+
+            obstacleSprite.sprite = tileObstacleSpriteData.sprite[(int)_obstacleType];
+
+            if (_obstacleType == ObstacleType.Null)
+            {
+                tileObstacleSpriteData = null;
+            }
+        }
+    }
 
     public bool isSetSprite
     {
@@ -80,8 +69,7 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
         }
     }
 
-    public ItemType itemType { get; private set; }
-    //public ObstacleType obstacleType { get; private set; }
+    public ItemType itemType { get; set; }
 
     [Header("[Tile Item Animation]")]
     public Animator animator;
@@ -105,19 +93,6 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
             this.GetComponent<Image>().enabled = true;
         }
     }
-
-    //public void Init(ObstacleType _obstacleType, ItemSpriteData _obstacleData)
-    //{
-    //    if (_obstacleType == ObstacleType.Null)
-    //    {
-    //        tileObstacleItemSprite = null;
-    //    }
-    //    else
-    //    {
-    //        obstacleType = _obstacleType;
-    //        tileObstacleItemSprite = _obstacleData;
-    //    }
-    //}
 
     #region Control Tile
     public void OnPointerUp(PointerEventData eventData)
@@ -146,7 +121,7 @@ public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPoin
     #region Move Tile
     public void Move(int _xPos, int _yPos, float _moveTime, bool _isThread = false)
     {
-        if (itemType == ItemType.Empty /*|| obstacleType != ObstacleType.Null*/) return;
+        if (itemType == ItemType.Empty || itemType == ItemType.Obstacle) return;
 
         if (!_isThread)
         {

@@ -296,6 +296,8 @@ MonoBehaviour:
   - {x: 6, y: 5}
   obstacleWoodTileMap:
   - {x: 2, y: 2}
+  - {x: 2, y: 3}
+  - {x: 3, y: 3}
   spriteDataArr:
   - {fileID: 11400000, guid: 9ee40a8e7f9989541861e40f648c77d6, type: 2}
   - {fileID: 11400000, guid: c78fb97fc080e0e47a82e77d81e2274c, type: 2}

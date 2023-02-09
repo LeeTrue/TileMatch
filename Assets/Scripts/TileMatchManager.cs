@@ -15,15 +15,16 @@ public enum ItemType
     Row,    // 같은 행 제거 아이템
     Column, // 같은 열 제거 아이템
     Bomb,   // 주변 9개 제거 아이템
-    Anything   // 같은 그림 제거 아이템
+    Anything,   // 같은 그림 제거 아이템
+
+    Obstacle
 }
 
 public enum ObstacleType
 {
-    Null,
-    Obstacle_Wood1,
-    Obstacle_Wood2,
-    Obstacle_Wood3
+    Null = 0,
+    Wood1,
+    Wood2
 }
 
 public static class Const
@@ -97,14 +98,13 @@ public class TileMatchManager : MonoBehaviour
             CreateNewTile((int)empty.x, (int)empty.y, ItemType.Empty);
         }
 
-        //foreach (Vector2 wood in obstacleWoodTileMap)
-        //{
-        //    if (tiles[(int)wood.x, (int)wood.y] == null)
-        //    {
-        //        CreateNewTile((int)wood.x, (int)wood.y, ItemType.Standard);
-        //        tiles[(int)wood.x, (int)wood.y].Init(ObstacleType.Obstacle_Wood1, spriteDataDic[SpriteType.Obstacle_Wood]);
-        //    }
-        //}
+        foreach (Vector2 wood in obstacleWoodTileMap)
+        {
+            if (tiles[(int)wood.x, (int)wood.y] == null)
+            {
+                CreateNewTile((int)wood.x, (int)wood.y, ItemType.Obstacle);
+            }
+        }
 
         for (int x = 0; x < maxColumn; x++)
         {
@@ -180,18 +180,18 @@ public class TileMatchManager : MonoBehaviour
                 if (checkTile.itemType == ItemType.Default) continue;
 
                 Tile downTile = tiles[xPos, yPos + 1];
-                if (downTile.itemType == ItemType.Empty) continue;
+                if (downTile.itemType == ItemType.Empty || downTile.itemType == ItemType.Obstacle) continue;
 
                 if (downTile.itemType == ItemType.Default)
                 {
                     // check : Empty , down : Default
-                    if (checkTile.itemType == ItemType.Empty)
+                    if (checkTile.itemType == ItemType.Empty || checkTile.itemType == ItemType.Obstacle)
                     {
                         for (int y = yPos - 1; y >= 0; y--)
                         {
                             if (tiles[xPos, y].itemType == ItemType.Default) break;
 
-                            if (tiles[xPos, y].itemType == ItemType.Empty)
+                            if (tiles[xPos, y].itemType == ItemType.Empty || tiles[xPos, y].itemType == ItemType.Obstacle)
                             {
                                 if (y > 0) continue; // 최상단이 아닌 경우엔 계속 위의 Tile 비교
                                 else // 최상단이 Empty인 경우 새로 생성
@@ -245,6 +245,7 @@ public class TileMatchManager : MonoBehaviour
     {
         if (clickedTile.itemType == ItemType.Default || toBeChangedTile.itemType == ItemType.Default) return;
         if (clickedTile.itemType == ItemType.Empty || toBeChangedTile.itemType == ItemType.Empty) return;
+        if (clickedTile.itemType == ItemType.Obstacle || toBeChangedTile.itemType == ItemType.Obstacle) return;
 
         isCheckedTile = true;
 
@@ -502,7 +503,7 @@ public class TileMatchManager : MonoBehaviour
                 do
                 {
                     specialTile = matchedTiles[Random.Range(0, matchedTiles.Count)];
-                } while (specialTile.itemType == ItemType.Empty /*|| (specialTile.obstacleType != ObstacleType.Null)*/);
+                } while (specialTile.itemType == ItemType.Empty || (specialTile.itemType == ItemType.Obstacle));
 
                 Vector2 specialTilePos = new Vector2(specialTile.xPos, specialTile.yPos);
 
@@ -578,13 +579,15 @@ public class TileMatchManager : MonoBehaviour
         if (tiles[_xPos, _yPos].itemType == ItemType.Empty || tiles[_xPos, _yPos].itemType == ItemType.Default 
             || tiles[_xPos, _yPos].isRemovedTile) return false;
 
-        //if (tiles[_xPos, _yPos].obstacleType != ObstacleType.Null)
-        //{
-        //    int typeIndex = (int)tiles[_xPos, _yPos].obstacleType;
-        //    ObstacleType type = (typeIndex + 1 > (int)ObstacleType.Obstacle_Wood3) ? ObstacleType.Null : (ObstacleType)(typeIndex + 1);
-        //    tiles[_xPos, _yPos].Init(type, spriteDataDic[SpriteType.Obstacle_Wood]);
-        //}
-        //else
+        if (tiles[_xPos, _yPos].itemType == ItemType.Obstacle)
+        {
+            int typeIndex = (int)tiles[_xPos, _yPos].obstacleType;
+            ObstacleType type = (typeIndex + 1 > (int)ObstacleType.Wood2) ? ObstacleType.Null : (ObstacleType)(typeIndex + 1);
+            tiles[_xPos, _yPos].obstacleType = type;
+
+            if (type == ObstacleType.Null) tiles[_xPos, _yPos].itemType = ItemType.Standard;
+        }
+        else
         {
             tiles[_xPos, _yPos].RemoveTile();
             CreateNewTile(_xPos, _yPos, ItemType.Default);
@@ -658,6 +661,14 @@ public class TileMatchManager : MonoBehaviour
         newTile.GetComponent<RectTransform>().sizeDelta = new Vector2(tileSize, tileSize);
         tiles[_xPos, _yPos] = newTile.GetComponent<Tile>();
         tiles[_xPos, _yPos].Init(_xPos, _yPos, this, _type);
+
+        if (_type == ItemType.Obstacle)
+        {
+            // ItemType이 Wood 인 경우, obstacle UI 세팅.
+            SetTileItemSprite(tiles[_xPos, _yPos], true);
+
+            tiles[_xPos, _yPos].obstacleType = ObstacleType.Wood1;
+        }
 
         return tiles[_xPos, _yPos];
     }

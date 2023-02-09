@@ -85,10 +85,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5339968503473349192}
+  - component: {fileID: 5339968503473349195}
   - component: {fileID: 5339968503473349188}
   - component: {fileID: 5339968503473349189}
   - component: {fileID: 5339968503473349194}
-  - component: {fileID: 5339968503473349195}
   m_Layer: 5
   m_Name: TilePrefab
   m_TagString: Untagged
@@ -118,6 +118,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 110, y: 110}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &5339968503473349195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5339968503473349193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca042eac47f904142b8b5db092e780db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageSprite: {fileID: 5339968502423865473}
+  obstacleSprite: {fileID: 4429684593681178704}
+  tileObstacleSpriteData: {fileID: 11400000, guid: 9befb0f73eeafa647b7a448264ed89a5, type: 2}
+  animator: {fileID: 5339968503473349194}
+  createAnimation: {fileID: 7400000, guid: 88519222666b7f548bdf3394571bf1a7, type: 2}
+  removeAnimation: {fileID: 7400000, guid: 6a673afd418e34b498932892ee1d6fbc, type: 2}
 --- !u!222 &5339968503473349188
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -176,22 +194,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5339968503473349195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5339968503473349193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca042eac47f904142b8b5db092e780db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imageSprite: {fileID: 5339968502423865473}
-  animator: {fileID: 5339968503473349194}
-  createAnimation: {fileID: 7400000, guid: 88519222666b7f548bdf3394571bf1a7, type: 2}
-  removeAnimation: {fileID: 7400000, guid: 6a673afd418e34b498932892ee1d6fbc, type: 2}
 --- !u!1 &5738006173159622816
 GameObject:
   m_ObjectHideFlags: 0
