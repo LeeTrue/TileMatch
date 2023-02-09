@@ -299,16 +299,15 @@ MonoBehaviour:
   - {x: 2, y: 3}
   - {x: 3, y: 3}
   spriteDataArr:
+  - {fileID: 11400000, guid: c1a640a40a8b9bd44be567c487cfe180, type: 2}
   - {fileID: 11400000, guid: 9ee40a8e7f9989541861e40f648c77d6, type: 2}
   - {fileID: 11400000, guid: c78fb97fc080e0e47a82e77d81e2274c, type: 2}
-  - {fileID: 11400000, guid: c1a640a40a8b9bd44be567c487cfe180, type: 2}
-  - {fileID: 11400000, guid: 9befb0f73eeafa647b7a448264ed89a5, type: 2}
-  - {fileID: 11400000, guid: 289bb8a85094a884bb1cad08f79324c6, type: 2}
-  - {fileID: 11400000, guid: aae7240670f8ac749b669dfa3535cc9d, type: 2}
-  - {fileID: 11400000, guid: f1c326cc8c62420458cf324d83374ee9, type: 2}
-  - {fileID: 11400000, guid: 633e4bec21b6231469b2e3a0d5c5fdf4, type: 2}
-  - {fileID: 11400000, guid: 9ca79c3319006f542b5642aa0d04c3c3, type: 2}
-  - {fileID: 11400000, guid: 8f6ff9ceea7e13346a8c568e2f9020c6, type: 2}
+  - {fileID: 11400000, guid: fc9d61bdc35ea1d4eb9501620a99729e, type: 2}
+  - {fileID: 11400000, guid: bcebfdfdb670de1418c65c42f94fa80a, type: 2}
+  - {fileID: 11400000, guid: 52afc62beb2ec014d9275a9252b077bc, type: 2}
+  - {fileID: 11400000, guid: 8701bfbdb7fc87f4da1f337b07598153, type: 2}
+  - {fileID: 11400000, guid: 710419943b1b74f459635bfae7b9261b, type: 2}
+  - {fileID: 11400000, guid: b6ab1f8cbf7f33345b3cbaff3ac56f50, type: 2}
   tilePrefab: {fileID: 5339968503473349193, guid: db90375df60cd634faf4cb304ee92d1b, type: 3}
 --- !u!1 &928627127
 GameObject:
@@ -538,7 +537,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4d8c75a4d7dd2a0489270e1058d82128, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ffc80c129c9aca14c9fb4dbeba0e10d2, type: 3}
   m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -678,8 +678,8 @@ public class TileMatchManager : MonoBehaviour
     {
         if (_isRandom)
         {
-            // SpriteType.Anything, Bomb, Empty을 제외한 인덱스 index 4 ~ Length
-            _tile.tileItemSprite = spriteDataArr[Random.Range(4, spriteDataArr.Length)];
+            // SpriteType.Anything, Bomb, Empty을 제외한 인덱스 index 3 ~ Length
+            _tile.tileItemSprite = spriteDataArr[Random.Range(3, spriteDataArr.Length)];
         }
         else
         {
