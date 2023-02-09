@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerEnterHandler
 {
     public int xPos { get; private set; }
     public int yPos { get; private set; }
@@ -10,7 +12,7 @@ public class Tile : MonoBehaviour
     private TileMatchManager tileManager;
 
     [Header("[Tile Item Sprite]")]
-    public SpriteRenderer imageSprite;
+    public Image imageSprite;
     private ItemSpriteData tileSpriteData;
     public ItemSpriteData tileItemSprite
     {
@@ -35,14 +37,39 @@ public class Tile : MonoBehaviour
                 if (itemType == ItemType.Bomb || itemType == ItemType.Anything)
                     animator.Play(createAnimation.name);
             }
-
-            // 타일의 아이템이 있는 경우, 배경도 enable
-            if(itemType != ItemType.Default && itemType != ItemType.Empty)
-            {
-                this.GetComponent<SpriteRenderer>().enabled = true;
-            }
         }
     }
+
+    //public SpriteRenderer obstacleSprite;
+    //private ItemSpriteData tileObstacleSpriteData;
+    //public ItemSpriteData tileObstacleItemSprite
+    //{
+    //    get { return tileObstacleSpriteData; }
+    //    set
+    //    {
+    //        tileObstacleSpriteData = value;
+
+    //        if (tileObstacleSpriteData == null)
+    //        {
+    //            obstacleSprite.sprite = null;
+    //        }
+    //        else
+    //        {
+    //            if (obstacleType == ObstacleType.Obstacle_Wood1)
+    //            {
+    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[0];
+    //            }
+    //            else if (obstacleType == ObstacleType.Obstacle_Wood2)
+    //            {
+    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[1];
+    //            }
+    //            else if (obstacleType == ObstacleType.Obstacle_Wood3)
+    //            {
+    //                obstacleSprite.sprite = tileObstacleSpriteData.sprite[2];
+    //            }
+    //        }
+    //    }
+    //}
 
     public bool isSetSprite
     {
@@ -54,6 +81,7 @@ public class Tile : MonoBehaviour
     }
 
     public ItemType itemType { get; private set; }
+    //public ObstacleType obstacleType { get; private set; }
 
     [Header("[Tile Item Animation]")]
     public Animator animator;
@@ -70,10 +98,42 @@ public class Tile : MonoBehaviour
         yPos = _y;
         tileManager = _tileManager;
         itemType = _itemType;
+
+        // 타일의 아이템이 있는 경우, 배경도 enable
+        if ((int)itemType >= (int)ItemType.Standard)
+        {
+            this.GetComponent<Image>().enabled = true;
+        }
     }
 
+    //public void Init(ObstacleType _obstacleType, ItemSpriteData _obstacleData)
+    //{
+    //    if (_obstacleType == ObstacleType.Null)
+    //    {
+    //        tileObstacleItemSprite = null;
+    //    }
+    //    else
+    //    {
+    //        obstacleType = _obstacleType;
+    //        tileObstacleItemSprite = _obstacleData;
+    //    }
+    //}
+
     #region Control Tile
-    private void OnMouseEnter()
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (tileManager.ClickedTile != tileManager.ToBeChangedTile)
+        {
+            tileManager.CheckPossibleChangeTile();
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        tileManager.ClickedTile = this;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
         // 전체 체크가 끝날때까지는 toBeChangedTile이 변경되지 않도록 함.
         if (!tileManager.isCheckedTile)
@@ -81,25 +141,12 @@ public class Tile : MonoBehaviour
             tileManager.ToBeChangedTile = this;
         }
     }
-
-    private void OnMouseDown()
-    {
-        tileManager.ClickedTile = this;
-    }
-
-    private void OnMouseUp()
-    {
-        if (tileManager.ClickedTile != tileManager.ToBeChangedTile)
-        {
-            tileManager.CheckPossibleChangeTile();
-        }
-    }
     #endregion
 
     #region Move Tile
     public void Move(int _xPos, int _yPos, float _moveTime, bool _isThread = false)
     {
-        if (itemType == ItemType.Empty) return;
+        if (itemType == ItemType.Empty /*|| obstacleType != ObstacleType.Null*/) return;
 
         if (!_isThread)
         {

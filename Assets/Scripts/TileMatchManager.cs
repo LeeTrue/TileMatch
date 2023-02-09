@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public enum ItemType
 {
-    Default,    // 제일 초기화 상태
+    Default = 0,    // 제일 초기화 상태
 
     Empty,  // tile이 생성 X
     
@@ -15,8 +15,12 @@ public enum ItemType
     Row,    // 같은 행 제거 아이템
     Column, // 같은 열 제거 아이템
     Bomb,   // 주변 9개 제거 아이템
-    Anything,   // 같은 그림 제거 아이템
-    
+    Anything   // 같은 그림 제거 아이템
+}
+
+public enum ObstacleType
+{
+    Null,
     Obstacle_Wood1,
     Obstacle_Wood2,
     Obstacle_Wood3
@@ -35,6 +39,7 @@ public class TileMatchManager : MonoBehaviour
 
     [Header("[Set TileMap]")]
     public Vector2[] emptyTileMap;
+    public Vector2[] obstacleWoodTileMap;
 
     [Header("[Tile Data]")]
     public ItemSpriteData[] spriteDataArr;
@@ -63,8 +68,13 @@ public class TileMatchManager : MonoBehaviour
 
     public bool isCheckedTile { get; private set; }
 
+    private float tileSize = 0.0f;
+
     private void Awake()
     {
+        tileSize = (Screen.height - 200) / Const.MAX_COUNT;
+        this.GetComponent<RectTransform>().sizeDelta = new Vector2(maxColumn * tileSize, maxRow * tileSize);
+
         // tile의 sprite 정보를 Dictionary에 세팅
         spriteDataDic = new Dictionary<SpriteType, ItemSpriteData>();
         foreach (ItemSpriteData data in spriteDataArr)
@@ -86,6 +96,15 @@ public class TileMatchManager : MonoBehaviour
         {
             CreateNewTile((int)empty.x, (int)empty.y, ItemType.Empty);
         }
+
+        //foreach (Vector2 wood in obstacleWoodTileMap)
+        //{
+        //    if (tiles[(int)wood.x, (int)wood.y] == null)
+        //    {
+        //        CreateNewTile((int)wood.x, (int)wood.y, ItemType.Standard);
+        //        tiles[(int)wood.x, (int)wood.y].Init(ObstacleType.Obstacle_Wood1, spriteDataDic[SpriteType.Obstacle_Wood]);
+        //    }
+        //}
 
         for (int x = 0; x < maxColumn; x++)
         {
@@ -141,6 +160,7 @@ public class TileMatchManager : MonoBehaviour
                 Destroy(topTile.gameObject);
 
                 GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(xPos, -1), Quaternion.identity, this.transform);
+                newTile.GetComponent<RectTransform>().sizeDelta = new Vector2(tileSize, tileSize);
                 tiles[xPos, 0] = newTile.GetComponent<Tile>();
                 tiles[xPos, 0].Init(xPos, -1, this, ItemType.Standard);
                 tiles[xPos, 0].Move(xPos, 0, speed);
@@ -178,6 +198,7 @@ public class TileMatchManager : MonoBehaviour
                                 {
                                     Destroy(downTile.gameObject);
                                     GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(xPos, yPos), Quaternion.identity, this.transform);
+                                    newTile.GetComponent<RectTransform>().sizeDelta = new Vector2(tileSize, tileSize);
                                     tiles[xPos, yPos + 1] = newTile.GetComponent<Tile>();
                                     tiles[xPos, yPos + 1].Init(xPos, yPos, this, ItemType.Standard);
                                     tiles[xPos, yPos + 1].Move(xPos, yPos + 1, speed);
@@ -481,7 +502,7 @@ public class TileMatchManager : MonoBehaviour
                 do
                 {
                     specialTile = matchedTiles[Random.Range(0, matchedTiles.Count)];
-                } while (specialTile.itemType == ItemType.Empty);
+                } while (specialTile.itemType == ItemType.Empty || (specialTile.obstacleType != ObstacleType.Null));
 
                 Vector2 specialTilePos = new Vector2(specialTile.xPos, specialTile.yPos);
 
@@ -557,8 +578,17 @@ public class TileMatchManager : MonoBehaviour
         if (tiles[_xPos, _yPos].itemType == ItemType.Empty || tiles[_xPos, _yPos].itemType == ItemType.Default 
             || tiles[_xPos, _yPos].isRemovedTile) return false;
 
-        tiles[_xPos, _yPos].RemoveTile();
-        CreateNewTile(_xPos, _yPos, ItemType.Default);
+        //if (tiles[_xPos, _yPos].obstacleType != ObstacleType.Null)
+        //{
+        //    int typeIndex = (int)tiles[_xPos, _yPos].obstacleType;
+        //    ObstacleType type = (typeIndex + 1 > (int)ObstacleType.Obstacle_Wood3) ? ObstacleType.Null : (ObstacleType)(typeIndex + 1);
+        //    tiles[_xPos, _yPos].Init(type, spriteDataDic[SpriteType.Obstacle_Wood]);
+        //}
+        //else
+        {
+            tiles[_xPos, _yPos].RemoveTile();
+            CreateNewTile(_xPos, _yPos, ItemType.Default);
+        }
 
         return true;
 
@@ -615,26 +645,30 @@ public class TileMatchManager : MonoBehaviour
     // 타일 좌표 계산
     public Vector2 GetWorldPosition(int _xPos, int _yPos)
     {
-        return new Vector2(-1 * (maxColumn / 2.0f) + _xPos, (maxRow / 2.0f) - _yPos);
+        RectTransform transform = this.GetComponent<RectTransform>();
+        Vector2 onePoint = new Vector2(this.transform.position.x - (transform.rect.width / 2), this.transform.position.y + (transform.rect.height / 2));
+
+        return new Vector2(onePoint.x + (_xPos * tileSize), onePoint.y - (_yPos * tileSize));
     }
 
     // 새로 타일 생성
     private Tile CreateNewTile(int _xPos, int _yPos, ItemType _type)
     {
         GameObject newTile = Instantiate(tilePrefab, GetWorldPosition(_xPos, _yPos), Quaternion.identity, this.transform);
+        newTile.GetComponent<RectTransform>().sizeDelta = new Vector2(tileSize, tileSize);
         tiles[_xPos, _yPos] = newTile.GetComponent<Tile>();
         tiles[_xPos, _yPos].Init(_xPos, _yPos, this, _type);
 
         return tiles[_xPos, _yPos];
     }
-    
+
     // 새로 생성한 타일 이미지 세팅
     private void SetTileItemSprite(Tile _tile, bool _isRandom, SpriteType _spriteType = SpriteType.Default)
     {
         if (_isRandom)
         {
-            // SpriteType.Anything, Bomb, Empty을 제외한 인덱스 index 3 ~ Length
-            _tile.tileItemSprite = spriteDataArr[Random.Range(3, spriteDataArr.Length)];
+            // SpriteType.Anything, Bomb, Empty을 제외한 인덱스 index 4 ~ Length
+            _tile.tileItemSprite = spriteDataArr[Random.Range(4, spriteDataArr.Length)];
         }
         else
         {
